@@ -143,32 +143,43 @@ np.mean(predict(res.x,x)==y)
 ```
 
 ## Output:
+
+
 Array Value of X:
 ![273365892-13958cfe-acfa-4bef-be02-8e63b5ba23e0](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/6454b3cb-8e25-464e-be6e-2cc8efbe2b14)
+
 
 Array Value of Y:
 ![273365937-a78e98e4-665c-4274-8e51-af590c355202](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/2a6fe54d-8a09-402c-82d8-67b71268b2c6)
 
+
 Score Graph:
 ![273365981-d96d4d9d-ea76-476f-95a1-1972193f2fce](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/749835b0-766d-451e-a417-7a834bc9b096)
+
 
 Sigmoid Function Graph:
 ![273366032-f2d149ba-35ab-4ab5-bf5b-ef0507c89226](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/2e47a818-5754-47ed-8d37-11c29b3e1437)
 
+
 X_Train Grad value:
 ![273366074-cdfb71e2-ca56-4d7a-b8e3-7866562421d3](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/cfaf1cb4-31c8-4165-b659-84b8ce580f3a)
+
 
 Y_Train Grad Value
 ![273366091-8be5a08a-5391-4993-ba3e-d2ea883904f0](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/a0ede115-54c8-4bd8-a4f1-57439fc4bc09)
 
+
 Res.X:
 ![273366106-0dc0b5a3-9872-42fd-ad21-fa2b626bdced](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/a54574e4-e853-4ba9-9240-b3bb5f79f944)
+
 
 Decision Boundary:
 ![273366143-cbc04f51-dfdd-4b1d-b3fa-dd2b677df60d](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/3833742b-fdac-47a4-ad4d-bcac64bc0c42)
 
+
 Probability Value:
 ![273366358-6b44222b-1adc-4298-96cd-4e889ce0dd70](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/4e45d0bd-8b4e-436b-a474-c37abb86f2e7)
+
 
 Prediction Value of Mean:
 ![273366428-43953b43-1d9f-405b-8c2b-5527c7ea2cc6](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/36b2c153-f05a-4f62-914c-0c2cebec2b35)
