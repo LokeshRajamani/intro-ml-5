@@ -8,22 +8,31 @@ To write a program to implement the the Logistic Regression Using Gradient Desce
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1.Prepare your data - Clean and format your data - Split your data into training and testing sets
+1.Import Libraries: Import the necessary libraries - pandas, numpy, and matplotlib.pyplot.
 
-2.Define your model - Use a sigmoid function to map inputs to outputs - Initialize weights and bias terms
+2.Load Dataset: Load the dataset using pd.read_csv.
 
-3.Define your cost function - Use binary cross-entropy loss function - Penalize the model for incorrect predictions
+3.Remove irrelevant columns (sl_no, salary).
 
-4.Define your learning rate - Determines how quickly weights are updated during gradient descent
+4.Convert categorical variables to numerical using cat.codes.
 
-5.Train your model - Adjust weights and bias terms using gradient descent - Iterate until convergence or for a fixed number of iterations
+5.Separate features (X) and target variable (Y).
 
-6.Evaluate your model - Test performance on testing data - Use metrics such as accuracy, precision, recall, and F1 score
+6.Define Sigmoid Function: Define the sigmoid function.
 
-7.Tune hyperparameters - Experiment with different learning rates and regularization techniques
+7.Define Loss Function: Define the loss function for logistic regression.
 
-8.Deploy your model - Use trained model to make predictions on new data in a real-world application.
+8.Define Gradient Descent Function: Implement the gradient descent algorithm to optimize the parameters.
 
+9.Training Model: Initialize theta with random values, then perform gradient descent to minimize the loss and obtain the optimal parameters.
+
+10.Define Prediction Function: Implement a function to predict the output based on the learned parameters.
+
+11.Evaluate Accuracy: Calculate the accuracy of the model on the training data.
+
+12.Predict placement status for a new student with given feature values (xnew).
+
+13.Print Results: Print the predictions and the actual values (Y) for comparison.
 ## Program:
 ```
 /*
@@ -34,176 +43,134 @@ RegisterNumber: 212222240055
 ```
 
 ```
+#import modules
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import optimize
 
-data = np.loadtxt("/content/ex2data2.txt",delimiter = ',')
-x= data[:,[0,1]]
-y= data[:,2]
-print('Array Value of x:')
-x[:5]
+dataset = pd.read_csv('Placement_Data.csv')
+dataset
 
-print('Array Value of y:')
-y[:5]
+dataset = dataset.drop('sl_no',axis=1)
+dataset = dataset.drop('salary',axis=1)
 
-print('Exam 1-Score graph')
-plt.figure()
-plt.scatter(x[y == 1][:,0],x[y == 1][:,1],label='Admitted')
-plt.scatter(x[y == 0][:,0],x[y == 0][:,1],label=' Not Admitted')
-plt.xlabel('Exam 1 score')
-plt.ylabel('Exam 2 score')
-plt.legend()
-plt.show()
+dataset["gender"] = dataset["gender"].astype('category')
+dataset["ssc_b"] = dataset["ssc_b"].astype('category')
+dataset["hsc_b"] = dataset["hsc_b"].astype('category')
+dataset["degree_t"] = dataset["degree_t"].astype('category')
+dataset["workex"] = dataset["workex"].astype('category')
+dataset["specialisation"] = dataset["specialisation"].astype('category')
+dataset["status"] = dataset["status"].astype('category')
+dataset["hsc_s"] = dataset["hsc_s"].astype('category')
+dataset.dtypes
 
+dataset["gender"] = dataset["gender"].cat.codes
+dataset["ssc_b"] = dataset["ssc_b"].cat.codes
+dataset["hsc_b"] = dataset["hsc_b"].cat.codes
+dataset["degree_t"] = dataset["degree_t"].cat.codes
+dataset["workex"] = dataset["workex"].cat.codes
+dataset["specialisation"] = dataset["specialisation"].cat.codes
+dataset["status"] = dataset["status"].cat.codes
+dataset["hsc_s"] = dataset["hsc_s"].cat.codes
+
+#display dataset
+dataset
+
+X = dataset.iloc[:, :-1].values
+Y = dataset.iloc[:, -1].values
+
+#display dependent variables
+Y
+
+theta = np.random.randn(X.shape[1])
+y=Y
 
 def sigmoid(z):
-  return 1/(1+np.exp(-z))
-  
-print('Sigmoid function graph: ')
-plt.plot()
-x_plot = np.linspace(-10,10,100)
-plt.plot(x_plot,sigmoid(x_plot))
-plt.show()
+  return 1/(1 + np.exp(-z))
+
+def loss(theta,X,y):
+  h = sigmoid(X.dot(theta))
+  return -np.sum(y * np.log(h) + (1-y) * np.log(1 - h))
 
 
-def costFunction(theta,x,y):
-  h = sigmoid(np.dot(x,theta))
-  j = -(np.dot(y,np.log(h))+np.dot(1-y,np.log(1-h)))/x.shape[0]
-  grad = np.dot(x.T,h-y)/x.shape[0]
-  return j,grad
+def gradient_descent(theta,X,y,alpha,num_iterations):
+  m = len(y)
+  for i in range(num_iterations):
+    h = sigmoid(X.dot(theta))
+    gradient = X.T.dot(h - y)/m
+    theta -= alpha * gradient
+  return theta
+
+theta = gradient_descent(theta, X,y,alpha = 0.01,num_iterations=1000)
+
+def predict(theta,X):
+  h = sigmoid(X.dot(theta))
+  y_pred = np.where(h >= 0.5, 1, 0)
+  return y_pred
+
+y_pred = predict(theta, X)
 
 
-print('X_train_grad_value: ')
-x_train = np.hstack((np.ones((x.shape[0],1)),x))
-theta = np.array([0,0,0])
-j,grad = costFunction(theta,x_train,y)
-print(j)
-print(grad)
+accuracy = np.mean(y_pred.flatten() == y)
+print("Accuracy:",accuracy)
 
 
-print('y_train_grad_value: ')
-x_train=np.hstack((np.ones((x.shape[0],1)),x))
-theta=np.array([-24,0.2,0.2])
-j,grad=costFunction(theta,x_train,y)
-print(j)
-print(grad)
+print(y_pred)
 
-def cost(theta,x,y):
-  h = sigmoid(np.dot(x,theta))
-  j = -(np.dot(y,np.log(h))+np.dot(1-y,np.log(1-h)))/x.shape[0]
-  return j
+print(Y)
 
+xnew = np.array([[0,87,0,95,0,2,78,2,0,0,1,0]])
+y_prednew = predict(theta, xnew)
+print(y_prednew)
 
-def cost(theta,x,y):
-  h = sigmoid(np.dot(x,theta))
-  j = -(np.dot(y,np.log(h))+np.dot(1-y,np.log(1-h)))/x.shape[0]
-  return j
+xnew = np.array([[0,0,0,0,0,2,8,2,0,0,1,0]])
+y_prednew = predict(theta, xnew)
+print(y_prednew)
 
-print('res.x:')
-x_train = np.hstack((np.ones((x.shape[0],1)),x))
-theta = np.array([0,0,0])
-res = optimize.minimize(fun=cost,x0=theta,args=(x_train,y),method='Newton-CG',jac=gradient)
-print(res.fun)
-print(res.x)
-
-
-def plotDecisionBoundary(theta,x,y):
-  x_min,x_max = x[:,0].min()-1,x[:,0].max()+1
-  y_min,y_max = x[:,1].min()-1,x[:,1].max()+1
-  xx,yy = np.meshgrid(np.arange(x_min,x_max,0.1),np.arange(y_min,y_max,0.1))
-  x_plot = np.c_[xx.ravel(),yy.ravel()]
-  x_plot = np.hstack((np.ones((x_plot.shape[0],1)),x_plot))
-  y_plot = np.dot(x_plot,theta).reshape(xx.shape)
-  plt.figure()
-  plt.scatter(x[y == 1][:,0],x[y == 1][:,1],label='Admitted')
-  plt.scatter(x[y == 0][:,0],x[y == 0][:,1],label='Not Admitted')
-  plt.contour(xx,yy,y_plot,levels=[0])
-  plt.xlabel('Exam  1 score')
-  plt.ylabel('Exam 2 score')
-  plt.legend()
-  plt.show()
-
-print('DecisionBoundary-graph for exam score: ')
-plotDecisionBoundary(res.x,x,y)
-
-print('Proability value: ')
-prob=sigmoid(np.dot(np.array([1,45,85]),res.x))
-print(prob)
-
-
-def predict(theta,x):
-  x_train = np.hstack((np.ones((x.shape[0],1)),x))
-  prob = sigmoid(np.dot(x_train,theta))
-  return (prob >=0.5).astype(int)
-
-
-print('Prediction value of mean:')
-np.mean(predict(res.x,x)==y)
 ```
+
 
 ## Output:
 
+Dataset:
 
-Array Value of X:
+![324399608-b759be5c-9ff7-44ab-ba18-0f95fef59a0a](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/9f2e7c30-47be-4020-a62d-294526a84c6a)
 
+Dataset.dtypes:
 
-![273365892-13958cfe-acfa-4bef-be02-8e63b5ba23e0](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/6454b3cb-8e25-464e-be6e-2cc8efbe2b14)
+![324399641-0ac77d57-1afe-49a7-aa8d-4414f90e9e92](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/6feb2bc1-ed4d-45d4-9c45-00a06af9606f)
 
+Dataset:
 
-Array Value of Y:
+![324399665-730e6d8a-e533-43b2-9d7a-71428c7ab09a](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/afb0aa16-22f3-46bb-884f-1ce1a77cbc60)
 
+Y:
 
-![273365937-a78e98e4-665c-4274-8e51-af590c355202](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/2a6fe54d-8a09-402c-82d8-67b71268b2c6)
+![324399781-c5a2dc74-8f83-46f5-8c99-ca4fc9fba3c3](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/a2faa436-4e38-4be7-beec-56dd1d92c633)
 
+Accuracy:
 
-Score Graph:
-
-
-![273365981-d96d4d9d-ea76-476f-95a1-1972193f2fce](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/749835b0-766d-451e-a417-7a834bc9b096)
-
-
-Sigmoid Function Graph:
-
+![324679436-6ab36fdc-19a4-4d7f-ab06-cce7d3dae7df](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/2f7ebe16-185e-4f8d-ba17-3160a8cfadcc)
 
 
-![273366032-f2d149ba-35ab-4ab5-bf5b-ef0507c89226](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/2e47a818-5754-47ed-8d37-11c29b3e1437)
+y_pred:
+
+![324399812-6dce3b27-0063-401d-b7e4-5f8dfb501496](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/4591ef34-8a1c-4018-9a20-c2ef9efa1403)
 
 
-X_Train Grad value:
+Y:
+
+![324399836-cbc84213-853e-4afc-b9f9-20a48dcd8903](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/74e50b47-024b-4d57-bb7b-e51333476774)
 
 
-![273366074-cdfb71e2-ca56-4d7a-b8e3-7866562421d3](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/cfaf1cb4-31c8-4165-b659-84b8ce580f3a)
+y_prednew:
+
+![324399868-fcfeba87-3f2f-4d1d-b625-b63326f7da16](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/2caf50ee-ab26-4f92-876d-852f7f9a9954)
 
 
-Y_Train Grad Value
+y_prednew:
 
-
-![273366091-8be5a08a-5391-4993-ba3e-d2ea883904f0](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/a0ede115-54c8-4bd8-a4f1-57439fc4bc09)
-
-
-Res.X:
-
-
-![273366106-0dc0b5a3-9872-42fd-ad21-fa2b626bdced](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/a54574e4-e853-4ba9-9240-b3bb5f79f944)
-
-
-Decision Boundary:
-
-
-![273366143-cbc04f51-dfdd-4b1d-b3fa-dd2b677df60d](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/3833742b-fdac-47a4-ad4d-bcac64bc0c42)
-
-
-Probability Value:
-
-
-![273366358-6b44222b-1adc-4298-96cd-4e889ce0dd70](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/4e45d0bd-8b4e-436b-a474-c37abb86f2e7)
-
-
-Prediction Value of Mean:
-
-
-![273366428-43953b43-1d9f-405b-8c2b-5527c7ea2cc6](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/36b2c153-f05a-4f62-914c-0c2cebec2b35)
+![324401796-244c54d9-fd43-43e7-8432-e8ca14255d6c](https://github.com/LokeshRajamani/intro-ml-5/assets/120544804/975c2f31-ba8d-4adc-b0f0-b71400133f65)
 
 
 ## Result:
