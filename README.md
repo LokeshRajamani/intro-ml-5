@@ -1,5 +1,5 @@
 # Ex-5 :Implementation-of-Logistic-Regression-Using-Gradient-Descent
-# Date: 25.03.202
+# Date: 23.04.202
 ## AIM:
 To write a program to implement the the Logistic Regression Using Gradient Descent.
 
